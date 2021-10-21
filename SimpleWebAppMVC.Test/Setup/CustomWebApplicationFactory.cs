@@ -19,7 +19,7 @@ namespace SimpleWebAppMVC.Test.Setup
 
                 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
                 optionsBuilder.UseSqlServer(IsLocal(env)
-                    ? "Server=<YOURSERVER>;Database=simplewebappdb;Integrated Security=true;MultipleActiveResultSets=True;"
+                    ? "Server=MOKLAS;Database=simplewebapp;Integrated Security=true;MultipleActiveResultSets=True;"
                     : "Server=tcp:<YOURSERVER>;Database=simplewebappdb;Persist Security Info=False;User ID=<YOURUSER>;Password=<YOURPASSWORD>;MultipleActiveResultSets=True;");
                 services.AddSingleton(_ => new AppDbContext(optionsBuilder.Options));
             });
