@@ -1,0 +1,54 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webAppName": {
+            "defaultValue": "mounir-almlabb-stage",
+            "type": "string"
+        },
+        "skuName": {
+            "defaultValue": "B1",
+            "type": "string"
+        }
+    },
+    "variables": {
+        "appServicePlanName": "plan-nackademin"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-02-01",
+            "name": "[variables('appServicePlanName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('skuName')]"
+            },
+            "kind": "app"
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[parameters('webAppName')]",
+            "location": "[resourceGroup().location]",
+
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+                "resources": [
+                    {
+                        "condition": "[contains(parameters('webAppName'),'almlabb')]",
+                        "type": "sourcecontrols",
+                        "apiVersion": "2020-06-01",
+                        "name": "web",
+                        "location": "[resourceGroup().location]",
+                        "dependsOn": [
+                            "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
